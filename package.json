@@ -1,0 +1,11 @@
+{
+  "name": "formshet",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "api:dev": "pnpm run --filter api dev"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
