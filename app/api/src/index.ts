@@ -2,14 +2,14 @@ import fastify from "fastify";
 import cors from "@fastify/cors"
 const PORT = 3000;
 const HOST = "0.0.0.0";
+import env from "@fastify/env";
 const main = async () => {
     const app = fastify({ logger: true });
     app.register(cors);
-
-
-    app.get("/", async (request, reply) => {
-        return { hello: "world" };
-    })
+    app.register(env, {
+        dotenv: true,
+        schema: {}
+    });
 
     app.listen({
         port: PORT,
