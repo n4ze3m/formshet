@@ -22,6 +22,7 @@
     "@fastify/cors": "^8.1.0",
     "@fastify/env": "^4.1.0",
     "@fastify/formbody": "^7.2.0",
+    "@fastify/multipart": "^7.1.2",
     "fastify": "^4.5.3",
     "googleapis": "^107.0.0"
   }

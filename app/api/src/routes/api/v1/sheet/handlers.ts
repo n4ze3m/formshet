@@ -16,7 +16,7 @@ export const getSheetById = async (request: FastifyRequest, _: FastifyReply) => 
         spreadsheetId: id,
         range: "A1:Z1"
     })
-    // get rows
+    // get rows         bnv
     const rows = await sheet.spreadsheets.values.get({
         spreadsheetId: id,
         range: "A2:Z"
@@ -33,8 +33,14 @@ export const getSheetById = async (request: FastifyRequest, _: FastifyReply) => 
 export const submitSheetForm = async (request: FastifyRequest, reply: FastifyReply) => {
     // get params
     const { id } = request.params as any;
-    // get form data or body
-    const data = request.body as any;
+    const supportedTypes = ["application/x-www-form-urlencoded", "application/json"]
+    let data: {}
+    if (!supportedTypes.includes(request.headers["content-type"])) {
+        return reply.status(400).send({
+            message: "Invalid content type"
+        })
+    }
+    data = request.body as any
     // if no data or data is empty
     if (!data || Object.keys(data).length === 0) {
         reply.status(400).send({
