@@ -14,3 +14,13 @@ export const convertToArrayOfObject = (columns: any[][], rows: any[][]) => {
     }
     return result;
 }
+
+export const convertToArrayOfRow = (columns: any[][], data: any) => {
+    const result: any = [];
+    for (let column of columns) {
+        for (let key of column) {
+            result.push(data[key] || "");
+        }
+    }
+    return result;
+}

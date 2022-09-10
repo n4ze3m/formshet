@@ -2,6 +2,7 @@ import fastify from "fastify";
 import cors from "@fastify/cors"
 import env from "@fastify/env";
 import autoload from "@fastify/autoload";
+import formbody from "@fastify/formbody"
 import path from "path";
 const main = async () => {
     const app = fastify({ logger: true });
@@ -10,12 +11,14 @@ const main = async () => {
     const HOST = "0.0.0.0";
     // enable  cors
     app.register(cors);
+    // enable urlencoded
+    app.register(formbody);
     // load env
     app.register(env, {
         dotenv: true,
         schema: {}
     });
-    // set up routes
+    // load routes
     app.register(autoload, {
         dir: path.join(__dirname, "routes"),
     });
