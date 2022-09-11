@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "api:dev": "pnpm run --filter api dev"
+    "api:dev": "pnpm run --filter api dev",
+    "ui:dev": "pnpm run --filter ui dev"
   },
   "keywords": [],
   "author": "",
