@@ -10,25 +10,26 @@ import {
 } from '@mantine/core';
 import { Link } from 'react-router-dom';
 
-export function LoginBody() {
+export function RegisterBody() {
     return (
         <Container size={420} my={40}>
             <Title
                 align="center"
                 sx={(theme) => ({ fontFamily: `Greycliff CF, ${theme.fontFamily}`, fontWeight: 900 })}
             >
-                Login to FormShet
+                Register to FormShet
             </Title>
             <Paper withBorder shadow="md" p={30} mt={30} radius="md">
+                <TextInput label="Name" placeholder="John Doe" required />
                 <TextInput label="Email" placeholder="you@example.com" required />
                 <PasswordInput label="Password" placeholder="Your password" required mt="md" />
                 <Button color="teal" fullWidth mt="xl">
-                    Login
+                    Register
                 </Button>
                 <Text color="dimmed" size="sm" align="center" mt="md">
-                    Do not have an account?{' '}
-                    <Anchor component={Link} to="/auth/register" size="sm" >
-                        Create account
+                    Already have an account?{' '}
+                    <Anchor component={Link} to="/auth/login" size="sm" >
+                        Login
                     </Anchor>
                 </Text>
             </Paper>
