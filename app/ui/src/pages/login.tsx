@@ -1,10 +1,11 @@
 import React from "react"
+import { LoginBody } from "../components/Login"
 
 
 export function Login() {
   return (
     <div>
-      <h1>Login</h1>
+      <LoginBody />
     </div>
   )
 }
