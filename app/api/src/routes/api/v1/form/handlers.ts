@@ -1,38 +1,65 @@
 import { FastifyReply, FastifyRequest } from "fastify";
+import { prisma } from "../../../../utils/common";
 import { convertToArrayOfObject, convertToArrayOfRow } from "../../../../utils/digest";
-import { googleSheet } from "../../../../utils/sheet";
-import { VerifySheet } from "./types";
+import { getSheetId, googleSheet } from "../../../../utils/sheet";
+import { CreateSheet, GetSheetByID, SubmitSheetForm, VerifySheet } from "./types";
 
 
 // formshit@ivisit-283003.iam.gserviceaccount.com
 
-export const getSheetById = async (request: FastifyRequest, _: FastifyReply) => {
+export const getSheetById = async (request: FastifyRequest<GetSheetByID>, reply: FastifyReply) => {
     // get id from param
-    const { id } = request.params as any;
-
+    const { formId } = request.params;
+    const { userId } = request.user;
     const sheet = await googleSheet()
 
-    // get column names
-    const columnNames = await sheet.spreadsheets.values.get({
-        spreadsheetId: id,
-        range: "A1:Z1"
-    })
-    // get rows         bnv
-    const rows = await sheet.spreadsheets.values.get({
-        spreadsheetId: id,
-        range: "A2:Z"
+    const form = await prisma.form.findFirst({
+        where: {
+            id: formId,
+            userId
+        }
     })
 
-    const data = convertToArrayOfObject(columnNames.data.values || [], rows.data.values || []);
-
-    return {
-        data
+    if (!form) {
+        return reply.status(404).send({
+            message: "Form not found"
+        })
     }
+
+    const id = form.sheetId
+
+    try {
+        // get column names
+        const columnNames = await sheet.spreadsheets.values.get({
+            spreadsheetId: id,
+            range: "A1:Z1"
+        })
+        // get rows of data
+        const rows = await sheet.spreadsheets.values.get({
+            spreadsheetId: id,
+            range: "A2:Z"
+        })
+
+        const data = convertToArrayOfObject(columnNames.data.values || [], rows.data.values || []);
+
+        return {
+            data: {
+                header: columnNames.data.values || [],
+                rows: data
+            },
+            form
+        }
+    } catch (e) {
+        return reply.status(500).send({
+            message: "Something went wrong"
+        })
+    }
+
 }
 
-export const submitSheetForm = async (request: FastifyRequest, reply: FastifyReply) => {
+export const submitSheetForm = async (request: FastifyRequest<SubmitSheetForm>, reply: FastifyReply) => {
     // get params
-    const { id } = request.params as any;
+    const { id } = request.params;
     const supportedTypes = ["application/x-www-form-urlencoded", "application/json"]
     let data: {}
     if (!supportedTypes.includes(request.headers["content-type"])) {
@@ -40,7 +67,7 @@ export const submitSheetForm = async (request: FastifyRequest, reply: FastifyRep
             message: "Invalid content type"
         })
     }
-    data = request.body as any
+    data = request.body
     // if no data or data is empty
     if (!data || Object.keys(data).length === 0) {
         reply.status(400).send({
@@ -78,15 +105,12 @@ export const verifySheet = async (request: FastifyRequest<VerifySheet>, reply: F
             error: "No url provided"
         })
     }
-    // get id from url using regex
-    const regex = /https:\/\/docs\.google\.com\/spreadsheets\/d\/([a-zA-Z0-9-_]+)\//
-    const match = url.match(regex);
-    if (!match) {
+    const id = getSheetId(url)
+    if (!id) {
         return reply.status(400).send({
             error: "Invalid url"
         })
     }
-    const id = match[1]
     const sheet = await googleSheet()
     // get sheet name 
     try {
@@ -104,4 +128,61 @@ export const verifySheet = async (request: FastifyRequest<VerifySheet>, reply: F
         })
     }
 
+}
+
+
+export const createSheet = async (request: FastifyRequest<CreateSheet>, reply: FastifyReply) => {
+    const { url } = request.body || {}
+
+    if (!url) {
+        return reply.status(400).send({
+            error: "No url provided"
+        })
+    }
+    const id = getSheetId(url)
+
+    if (!id) {
+        return reply.status(400).send({
+            error: "Invalid url"
+        })
+    }
+    const sheet = await googleSheet()
+    try {
+        const sheetName = await sheet.spreadsheets.get({
+            spreadsheetId: id
+        })
+        const name = sheetName.data.properties?.title || "Untitled Sheet"
+        const { userId } = request.user
+
+        const newForm = await prisma.form.create({
+            data: {
+                name,
+                sheetId: id,
+                sheetUrl: url,
+                userId
+            }
+        })
+
+        return {
+            id: newForm.id,
+            message: "Form created successfully"
+        }
+    } catch (error) {
+        return reply.status(400).send({
+            error: "You don't have access to this sheet"
+        })
+    }
+}
+
+export const getUserForms = async (request: FastifyRequest, reply: FastifyReply) => {
+    const { userId } = request.user
+    const forms = await prisma.form.findMany({
+        where: {
+            userId
+        },
+        orderBy: {
+            createdAt: "desc"
+        }
+    })
+    return forms
 }
