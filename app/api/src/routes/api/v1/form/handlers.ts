@@ -1,6 +1,7 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 import { convertToArrayOfObject, convertToArrayOfRow } from "../../../../utils/digest";
 import { googleSheet } from "../../../../utils/sheet";
+import { VerifySheet } from "./types";
 
 
 // formshit@ivisit-283003.iam.gserviceaccount.com
@@ -28,7 +29,6 @@ export const getSheetById = async (request: FastifyRequest, _: FastifyReply) => 
         data
     }
 }
-
 
 export const submitSheetForm = async (request: FastifyRequest, reply: FastifyReply) => {
     // get params
@@ -68,4 +68,40 @@ export const submitSheetForm = async (request: FastifyRequest, reply: FastifyRep
     return {
         message: "Thanks for submitting the form"
     }
+}
+
+export const verifySheet = async (request: FastifyRequest<VerifySheet>, reply: FastifyReply) => {
+    const { url } = request.body || {}
+
+    if (!url) {
+        return reply.status(400).send({
+            error: "No url provided"
+        })
+    }
+    // get id from url using regex
+    const regex = /https:\/\/docs\.google\.com\/spreadsheets\/d\/([a-zA-Z0-9-_]+)\//
+    const match = url.match(regex);
+    if (!match) {
+        return reply.status(400).send({
+            error: "Invalid url"
+        })
+    }
+    const id = match[1]
+    const sheet = await googleSheet()
+    // get sheet name 
+    try {
+        const sheetName = await sheet.spreadsheets.get({
+            spreadsheetId: id
+        })
+
+        return {
+            name: sheetName.data.properties?.title,
+            id
+        }
+    } catch (error) {
+        return reply.status(400).send({
+            error: "You don't have access to this sheet"
+        })
+    }
+
 }

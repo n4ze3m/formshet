@@ -14,6 +14,9 @@ declare module "@fastify/jwt" {
 export default fp<FastifyJWTOptions>(async (fastify, opts) => {
     fastify.register(fastifyJwt, {
         secret: fastify.config.FORMSHET_SECRET_KEY,
+        sign: {
+            expiresIn: '7d'
+        }
     })
 
     fastify.decorate("authenticate", async function (request, reply) {
