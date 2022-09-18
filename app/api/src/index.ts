@@ -5,6 +5,15 @@ import autoload from "@fastify/autoload";
 import formbody from "@fastify/formbody";
 import multipart from "@fastify/multipart";
 import path from "path";
+
+declare module "fastify" {
+  interface FastifyInstance {
+    config: {
+      FORMSHET_SECRET_KEY: string;
+    };
+  }
+}
+
 const main = async () => {
   const app = fastify({ logger: true });
   // constants
@@ -16,11 +25,32 @@ const main = async () => {
   app.register(formbody);
   // enable multipart
   app.register(multipart, { attachFieldsToBody: true });
+  // enable jwt
+
   // load env
   app.register(env, {
     dotenv: true,
-    schema: {},
+    schema: {
+      type: "object",
+      required: ["FORMSHET_SECRET_KEY", "GOOGLE_CRED_PATH"],
+      properties: {
+        FORMSHET_SECRET_KEY: {
+          type: "string",
+        },
+        FORMSHET_DATABASE_URL: {
+          type: "string",
+          default: "file:../db/database.db",
+        },
+        GOOGLE_CRED_PATH: {
+          type: "string",
+        },
+      },
+    },
   });
+  // load plugins
+  app.register(autoload, {
+		dir: path.join(__dirname, 'plugins')
+	});
   // load routes
   app.register(autoload, {
     dir: path.join(__dirname, "routes"),

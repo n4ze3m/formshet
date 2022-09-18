@@ -4,7 +4,9 @@
   "description": "",
   "scripts": {
     "api:dev": "pnpm run --filter api dev",
-    "ui:dev": "pnpm run --filter ui dev"
+    "ui:dev": "pnpm run --filter ui dev",
+    "dev": "pnpm --stream -r run dev",
+    "start": "pnpm --stream -r run dev"
   },
   "keywords": [],
   "author": "",
