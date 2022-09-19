@@ -7,10 +7,12 @@ import {
   Group,
   Avatar,
   MediaQuery,
+  Menu,
+  UnstyledButton,
 } from "@mantine/core";
 import React from "react";
 import { Navigate, Outlet } from "react-router-dom";
-import { ChevronDown } from "tabler-icons-react";
+import { ChevronDown, Logout, Settings } from "tabler-icons-react";
 import { useAuth } from "../../hooks/useAuth";
 const HEADER_HEIGHT = 65;
 
@@ -28,10 +30,27 @@ const useStyles = createStyles((theme) => ({
     },
   },
 
+  user: {
+    color: theme.colorScheme === "dark" ? theme.colors.dark[0] : theme.black,
+    padding: `${theme.spacing.xs}px ${theme.spacing.sm}px`,
+    borderRadius: theme.radius.sm,
+    transition: "background-color 100ms ease",
+
+    "&:hover": {
+      backgroundColor:
+        theme.colorScheme === "dark" ? theme.colors.dark[8] : theme.white,
+    },
+  },
+
   burger: {
-    [theme.fn.largerThan("sm")]: {
+    [theme.fn.largerThan("xs")]: {
       display: "none",
     },
+  },
+
+  userActive: {
+    backgroundColor:
+      theme.colorScheme === "dark" ? theme.colors.dark[8] : theme.white,
   },
 
   link: {
@@ -64,15 +83,14 @@ const useStyles = createStyles((theme) => ({
 }));
 
 export default function DashboardLayout() {
-  const { isLogged, profile } = useAuth();
+  const { isLogged, profile, logout } = useAuth();
+  const [userMenuOpened, setUserMenuOpened] = React.useState(false);
 
   if (!isLogged) {
     return <Navigate to="/auth/login" />;
   }
 
-  console.log("Profile", profile);
-
-  const { classes } = useStyles();
+  const { classes, cx } = useStyles();
 
   return (
     <AppShell
@@ -93,13 +111,41 @@ export default function DashboardLayout() {
             <Text className={classes.curosrPointer} weight="bold" size="lg">
               FormShet
             </Text>
-            <Group spacing={7}>
-              <Avatar src={profile?.avatar} radius="xl" size={30} />
-              <MediaQuery smallerThan={"sm"} styles={{ display: "none" }}>
-                <span>{profile?.email}</span>
-              </MediaQuery>
-              <ChevronDown size={12} />
-            </Group>
+            <Menu
+              width={260}
+              position="bottom-end"
+              transition="pop-top-right"
+              onClose={() => setUserMenuOpened(false)}
+              onOpen={() => setUserMenuOpened(true)}
+            >
+              <Menu.Target>
+                <UnstyledButton
+                  className={cx(classes.user, {
+                    [classes.userActive]: userMenuOpened,
+                  })}
+                >
+                  <Group spacing={7}>
+                    <Avatar src={profile?.avatar} radius="xl" size={30} />
+                    <MediaQuery smallerThan={"sm"} styles={{ display: "none" }}>
+                      <span>{profile?.email}</span>
+                    </MediaQuery>
+                    <ChevronDown size={12} />
+                  </Group>
+                </UnstyledButton>
+              </Menu.Target>
+              <Menu.Dropdown>
+                <Menu.Item icon={<Settings size={14} />}>Settings</Menu.Item>
+                <Menu.Divider />
+                <Menu.Label>Danger zone</Menu.Label>
+                <Menu.Item
+                  color="red"
+                  icon={<Logout size={14} />}
+                  onClick={logout}
+                >
+                  Logout
+                </Menu.Item>
+              </Menu.Dropdown>
+            </Menu>
           </Container>
         </Header>
       }
