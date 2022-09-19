@@ -8,15 +8,15 @@ import {
   Text,
   Anchor,
 } from "@mantine/core";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useForm } from "@mantine/form";
 import { useMutation } from "@tanstack/react-query";
 import api from "../../service/api";
-import { setProfile, setToken } from "../../service/cookie";
 import { handleError } from "../../utils/error";
+import { useAuth } from "../../hooks/useAuth";
 
 export function LoginBody() {
-  const navigate = useNavigate();
+  const { login: setCurrentUser } = useAuth();
   const form = useForm({
     initialValues: {
       email: "",
@@ -47,12 +47,9 @@ export function LoginBody() {
   const { mutateAsync: login, isLoading } = useMutation(onSubmit, {
     onSuccess: (data) => {
       const { token, payload } = data;
-      setProfile(payload);
-      setToken(token);
-      navigate("/");
+      setCurrentUser(token, payload);
     },
     onError: (error) => {
-        console.log(error)
       handleError(error);
     },
   });
