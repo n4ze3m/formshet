@@ -1,5 +1,6 @@
 import { Grid, Text } from "@mantine/core";
 import { useQuery } from "@tanstack/react-query";
+import React from "react";
 import api from "../../service/api";
 import { FormCard } from "./FormCard";
 import { FormsLoading } from "./FormsLoading";
@@ -27,10 +28,10 @@ export const FormsGrid = () => {
   const { data, status } = useQuery(["findAllUserForms"], fetchData);
 
   return (
-    <div>
+    <React.Fragment>
       {status === "loading" && <FormsLoading />}
       {status === "success" && <FormGrid data={data} />}
       {status === "error" && <Text>Failed to fetch data</Text>}
-    </div>
+    </React.Fragment>
   );
 };

@@ -11,7 +11,7 @@ import {
   UnstyledButton,
 } from "@mantine/core";
 import React from "react";
-import { Navigate, Outlet } from "react-router-dom";
+import { Navigate, Outlet, useNavigate } from "react-router-dom";
 import { ChevronDown, Logout, Settings } from "tabler-icons-react";
 import { useAuth } from "../../hooks/useAuth";
 const HEADER_HEIGHT = 65;
@@ -85,6 +85,7 @@ const useStyles = createStyles((theme) => ({
 export default function DashboardLayout() {
   const { isLogged, profile, logout } = useAuth();
   const [userMenuOpened, setUserMenuOpened] = React.useState(false);
+  const navigate = useNavigate();
 
   if (!isLogged) {
     return <Navigate to="/auth/login" />;
@@ -108,7 +109,12 @@ export default function DashboardLayout() {
       header={
         <Header height={HEADER_HEIGHT}>
           <Container className={classes.inner}>
-            <Text className={classes.curosrPointer} weight="bold" size="lg">
+            <Text
+              onClick={() => navigate("/")}
+              className={classes.curosrPointer}
+              weight="bold"
+              size="lg"
+            >
               FormShet
             </Text>
             <Menu
