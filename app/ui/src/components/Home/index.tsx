@@ -1,5 +1,5 @@
-import { Divider, Grid } from "@mantine/core";
-import { FormCard } from "./FormCard";
+import { Divider } from "@mantine/core";
+import { FormsGrid } from "./FormsGrid";
 import { TopSession } from "./TopSession";
 
 
@@ -8,7 +8,8 @@ export function HomeBody() {
         <div>
             <TopSession />
             <Divider my="md" />
-            <div>
+            <FormsGrid />
+            {/* <div>
                 <Grid>
                     <Grid.Col md={6} lg={6}>
                         <FormCard />
@@ -23,7 +24,7 @@ export function HomeBody() {
                         <FormCard />
                     </Grid.Col>
                 </Grid>
-            </div>
+            </div> */}
         </div>
     )
 }
