@@ -2,7 +2,7 @@ import { FastifyReply, FastifyRequest } from "fastify";
 import { prisma } from "../../../../utils/common";
 import { convertToArrayOfObject, convertToArrayOfRow } from "../../../../utils/digest";
 import { getSheetId, googleSheet } from "../../../../utils/sheet";
-import { CreateSheet, GetSheetByID, SubmitSheetForm, VerifySheet } from "./types";
+import { CreateSheet, DeleteSheetForm, GetSheetByID, SubmitSheetForm, VerifySheet } from "./types";
 
 
 // formshit@ivisit-283003.iam.gserviceaccount.com
@@ -159,7 +159,7 @@ export const createSheet = async (request: FastifyRequest<CreateSheet>, reply: F
                 name,
                 sheetId: id,
                 sheetUrl: url,
-                userId
+                userId,
             }
         })
 
@@ -185,4 +185,32 @@ export const getUserForms = async (request: FastifyRequest, reply: FastifyReply)
         }
     })
     return forms
+}
+
+export const deleteForm = async (request: FastifyRequest<DeleteSheetForm>, reply: FastifyReply) => {
+    const { userId } = request.user
+    const { id } = request.params
+
+    const isFormExist = await prisma.form.findFirst({
+        where: {
+            userId,
+            id
+        }
+    })
+
+    if (!isFormExist) {
+        return reply.status(404).send({
+            error: "Form not found"
+        })
+    }
+
+    await prisma.form.delete({
+        where: {
+            id
+        }
+    })
+
+    return {
+        message: "Form deleted successfully"
+    }
 }

@@ -1,12 +1,13 @@
 import { FastifyPluginAsync } from "fastify";
 import {
     createSheet,
+    deleteForm,
     getSheetById,
     getUserForms,
     submitSheetForm,
     verifySheet,
 } from "./handlers";
-import { GetSheetByID, SubmitSheetForm, VerifySheet } from "./types";
+import { DeleteSheetForm, GetSheetByID, SubmitSheetForm, VerifySheet } from "./types";
 const root: FastifyPluginAsync = async (fastify): Promise<void> => {
     // api to get form data from sheet to react frontend
     fastify.get<GetSheetByID>("/:formId", {
@@ -34,6 +35,11 @@ const root: FastifyPluginAsync = async (fastify): Promise<void> => {
     fastify.get("/all", {
         onRequest: [fastify.authenticate],
     }, getUserForms)
+
+    // api to delete form
+    fastify.delete<DeleteSheetForm>("/:id", {
+        onRequest: [fastify.authenticate],
+    }, deleteForm)
 };
 
 export default root;

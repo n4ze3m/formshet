@@ -27,7 +27,12 @@ export function FormCard(data: any) {
   const navigate = useNavigate();
 
   return (
-    <Card shadow="sm" p="lg" className={classes.card}>
+    <Card
+      shadow="sm"
+      p="lg"
+      className={classes.card}
+      onClick={() => navigate(`/form/${data.id}`)}
+    >
       <Text weight={500}>{data?.name || "Form Name"}</Text>
       <Group
         position="apart"

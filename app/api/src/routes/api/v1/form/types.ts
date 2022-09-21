@@ -15,3 +15,7 @@ export interface SubmitSheetForm {
 	Params: { id: string },
 	Body: { [key: string]: string }
 }
+
+export interface DeleteSheetForm {
+	Params: { id: string }
+}

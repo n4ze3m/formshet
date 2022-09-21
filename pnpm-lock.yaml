@@ -21,6 +21,7 @@ importers:
       fastify: ^4.5.3
       fastify-plugin: ^4.2.1
       googleapis: ^107.0.0
+      nanoid: ^4.0.0
       nodemon: ^2.0.19
       prisma: ^4.3.1
       rimraf: ^3.0.2
@@ -39,6 +40,7 @@ importers:
       fastify: 4.5.3
       fastify-plugin: 4.2.1
       googleapis: 107.0.0
+      nanoid: 4.0.0
     devDependencies:
       '@types/bcryptjs': 2.4.2
       '@types/node': 18.7.16
@@ -2118,6 +2120,12 @@ packages:
     engines: {node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1}
     hasBin: true
     dev: true
+
+  /nanoid/4.0.0:
+    resolution: {integrity: sha512-IgBP8piMxe/gf73RTQx7hmnhwz0aaEXYakvqZyE302IXW3HyVNhdNGC+O2MwMAVhLEnvXlvKtGbtJf6wvHihCg==}
+    engines: {node: ^14 || ^16 || >=18}
+    hasBin: true
+    dev: false
 
   /node-fetch/2.6.7:
     resolution: {integrity: sha512-ZjMPFEfVx5j+y2yF35Kzx5sF7kDzxuDj6ziH4FFbOp87zKDZNx8yExJIb05OGF4Nlt9IHFIMBkRl41VdvcNdbQ==}
