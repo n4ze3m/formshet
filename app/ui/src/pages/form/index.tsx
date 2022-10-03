@@ -1,9 +1,10 @@
 import React from "react";
+import { FormHomeBody } from "../../components/Form";
 
 export function FormHome() {
-    return (
-        <div>
-            <h1>Form Home</h1>
-        </div>
-    )
+  return (
+    <div>
+      <FormHomeBody />
+    </div>
+  );
 }

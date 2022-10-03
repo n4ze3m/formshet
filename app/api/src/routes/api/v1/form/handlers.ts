@@ -45,9 +45,11 @@ export const getSheetById = async (request: FastifyRequest<GetSheetByID>, reply:
         return {
             data: {
                 header: columnNames.data.values || [],
-                rows: data
+                rows: data,
+                numberOfRows: data.length
             },
-            form
+            
+            form,
         }
     } catch (e) {
         return reply.status(500).send({

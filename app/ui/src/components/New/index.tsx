@@ -14,6 +14,7 @@ import React from "react";
 import { AlertCircle } from "tabler-icons-react";
 import api from "../../service/api";
 import { errorMessage } from "../../utils/error";
+import { useNavigate } from "react-router-dom";
 
 const useStyles = createStyles(() => {
   return {
@@ -25,6 +26,7 @@ const useStyles = createStyles(() => {
 
 export function NewBody() {
   const { classes } = useStyles();
+  const navigate = useNavigate();
   const [error, setError] = React.useState("");
   const client = useQueryClient();
   const form = useForm({
@@ -71,8 +73,10 @@ export function NewBody() {
     mutateAsync: create,
     isError: isCreateError,
   } = useMutation(onCreate, {
-    onSuccess: () => {
+    onSuccess: (response) => {
       client.invalidateQueries(["findAllUserForms"]);
+      const id = response.id;
+      navigate(`/form/${id}`);
     },
     onError: (error) => {
       const message = errorMessage(error);
