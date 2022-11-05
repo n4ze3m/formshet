@@ -1,9 +1,9 @@
 import React from "react";
-
+import { FormIntergationBody } from "../../components/Form";
 export function FormIntergation() {
     return (
         <div>
-            <h1>Form Intergation</h1>
+            <FormIntergationBody />
         </div>
     )
 }

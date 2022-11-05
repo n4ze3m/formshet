@@ -10,7 +10,10 @@ export interface CreateSheet {
 export interface GetSheetByID {
 	Params: {formId: string }
 }
-
+export interface SheetByIDUpdate {
+	Params: {formId: string },
+	Body: { [key: string]: string }
+}
 export interface SubmitSheetForm {
 	Params: { id: string },
 	Body: { [key: string]: string }

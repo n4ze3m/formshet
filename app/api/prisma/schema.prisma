@@ -30,6 +30,7 @@ model Form {
   publicAccess Boolean  @default(false)
   accessKey    String?
   user         User     @relation(fields: [userId], references: [id])
+  sendEmail    Boolean  @default(false)
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 }
