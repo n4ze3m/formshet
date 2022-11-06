@@ -1,9 +1,10 @@
 import React from "react";
+import { FormCodeBody } from "../../components/Form";
 
 export function FormCode() {
     return (
         <div>
-            <h1>Form Code</h1>
+           <FormCodeBody />
         </div>
     )
 }

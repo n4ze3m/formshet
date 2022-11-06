@@ -12,7 +12,7 @@ export interface GetSheetByID {
 }
 export interface SheetByIDUpdate {
 	Params: {formId: string },
-	Body: { [key: string]: string }
+	Body: { [key: string]: string | boolean | number }
 }
 export interface SubmitSheetForm {
 	Params: { id: string },

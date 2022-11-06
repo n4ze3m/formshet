@@ -1,10 +1,15 @@
 import { FastifyReply, FastifyRequest } from "fastify";
+import { generateHTMLCode } from "../../../../utils/code";
 import { prisma } from "../../../../utils/common";
 import {
   convertToArrayOfObject,
   convertToArrayOfRow,
 } from "../../../../utils/digest";
-import { getSheetId, googleSheet } from "../../../../utils/sheet";
+import {
+  getSheetHeaders,
+  getSheetId,
+  googleSheet,
+} from "../../../../utils/sheet";
 import {
   CreateSheet,
   DeleteSheetForm,
@@ -279,14 +284,14 @@ export const updateFormIntergation = async (
           id: formId,
         },
         data: {
-          sendEmail: Boolean(body["value"]),
+          sendEmail: body["value"] as boolean,
         },
       });
     }
 
     return {
-        message: "Settings updated successfully",
-    }
+      message: "Settings updated successfully",
+    };
   } catch (e) {
     return reply.status(500).send({
       error: "Something went wrong",
@@ -322,4 +327,43 @@ export const deleteForm = async (
   return {
     message: "Form deleted successfully",
   };
+};
+
+export const getUserFormCode = async (
+  request: FastifyRequest<GetSheetByID>,
+  reply: FastifyReply
+) => {
+  try {
+    const { formId } = request.params;
+    const { userId, email } = request.user;
+    const form = await prisma.form.findFirst({
+      where: {
+        id: formId,
+        userId,
+      },
+    });
+
+    if (!form) {
+      return reply.status(404).send({
+        message: "Form not found",
+      });
+    }
+    const id = form.sheetId;
+    const headers = await getSheetHeaders(id);
+
+    const htmlCode = generateHTMLCode(id, headers);
+
+    return [
+      {
+        id: 1,
+        label: "HTML",
+        description: "Embed this code in your website",
+        value: htmlCode,
+      },
+    ];
+  } catch (e) {
+    return reply.status(500).send({
+      error: "Something went wrong",
+    });
+  }
 };

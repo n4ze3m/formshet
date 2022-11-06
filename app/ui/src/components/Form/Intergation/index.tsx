@@ -5,6 +5,7 @@ import React from "react";
 import { useParams } from "react-router-dom";
 import { InfoCircle } from "tabler-icons-react";
 import api from "../../../service/api";
+import { handleError } from "../../../utils/error";
 export function FormIntergationBody() {
     // get params from url
     const param = useParams();
@@ -16,6 +17,7 @@ export function FormIntergationBody() {
     };
 
     const updateIntergationData = async (data: any) => {
+        console.log(data)
         const response = await api.put(`/form/${param.id}/integration`, data);
         return response.data
     }
@@ -29,8 +31,11 @@ export function FormIntergationBody() {
         onSuccess: () => {
             client.invalidateQueries(["fetchIntergationData", param.id]);
             showNotification({
-            message: "Intergation updated",
+                message: "Intergation updated",
             })
+        },
+        onError: (error: any) => {
+            handleError(error)
         }
     });
 
@@ -56,11 +61,11 @@ export function FormIntergationBody() {
                                         </Text>
                                     </div>
                                     <Switch
-                                        value={intg.value}
+                                        checked={intg.value}
                                         onChange={(value) => {
                                             updateIntergation({
                                                 id: intg.id.toString(),
-                                                value: value
+                                                value: value.currentTarget.checked
                                             })
                                         }}
                                     />

@@ -7,7 +7,8 @@ import {
   submitSheetForm,
   verifySheet,
   getUserFormIntergation,
-  updateFormIntergation
+  updateFormIntergation,
+  getUserFormCode
 } from "./handlers";
 import {
   DeleteSheetForm,
@@ -40,6 +41,14 @@ const root: FastifyPluginAsync = async (fastify): Promise<void> => {
         onRequest: [fastify.authenticate],
     },
     updateFormIntergation
+    );
+    // api to get code from third party
+    fastify.get<GetSheetByID>(
+    "/:formId/code",
+    {
+        onRequest: [fastify.authenticate],
+    },
+    getUserFormCode
     );
 
   // api to submit form from frontend

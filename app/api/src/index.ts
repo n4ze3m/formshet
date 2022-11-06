@@ -10,6 +10,7 @@ declare module "fastify" {
   interface FastifyInstance {
     config: {
       FORMSHET_SECRET_KEY: string;
+      FORMSHET_HOST: string;
     };
   }
 }
@@ -41,6 +42,10 @@ const main = async () => {
           type: "string",
           default: "file:../db/database.db",
         },
+        FORMSHET_HOST: {
+          type: "string",
+          default: "http://localhost:3000",
+        },
         GOOGLE_CRED_PATH: {
           type: "string",
         },
@@ -49,8 +54,8 @@ const main = async () => {
   });
   // load plugins
   app.register(autoload, {
-		dir: path.join(__dirname, 'plugins')
-	});
+    dir: path.join(__dirname, "plugins"),
+  });
   // load routes
   app.register(autoload, {
     dir: path.join(__dirname, "routes"),
