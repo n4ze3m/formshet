@@ -3,91 +3,108 @@ import { prisma } from "../../../../utils/common";
 import { Login, Register } from "./types";
 import bcrypt from "bcryptjs";
 
-export const userLogin = async (request: FastifyRequest<Login>, _: FastifyReply) => {
-    const { email, password } = request.body || {};
+export const userLogin = async (
+  request: FastifyRequest<Login>,
+  _: FastifyReply
+) => {
+  const { email, password } = request.body || {};
 
-    if (!email || !password) {
-        throw {
-            status: 500,
-            message: "Email or password is missing",
-        };
-    }
+  if (!email || !password) {
+    throw {
+      status: 500,
+      message: "Email or password is missing",
+    };
+  }
 
-    const user = await prisma.user.findUnique({
-        where: {
-            email
-        }
-    })
+  const user = await prisma.user.findUnique({
+    where: {
+      email,
+    },
+  });
 
-    if (!user) {
-        throw {
-            status: 500,
-            message: "Invalid email or password"
-        };
-    }
+  if (!user) {
+    throw {
+      status: 500,
+      message: "Invalid email or password",
+    };
+  }
 
+  const passwordMatch = await bcrypt.compare(password, user.password);
 
-    const passwordMatch = await bcrypt.compare(
-        password,
-        user.password
-    );
+  if (!passwordMatch) {
+    throw {
+      status: 500,
+      message: "Wrong password or email address.",
+    };
+  }
 
-    if (!passwordMatch) {
-        throw {
-            status: 500,
-            message: "Wrong password or email address.",
-        };
-    }
+  const payload = {
+    userId: user.id,
+    email: user.email,
+    name: user.name,
+  };
 
+  return payload;
+};
 
-    const payload = {
-        userId: user.id,
-        email: user.email,
-        name: user.name,
-    }
+export const userRegister = async (
+  request: FastifyRequest<Register>,
+  _: FastifyReply
+) => {
+  const { email, password, name } = request.body || {};
+  if (!email || !password || !name) {
+    throw {
+      status: 500,
+      message: "Name, email or password is missing",
+    };
+  }
 
-    
-    return payload;
-}
+  const user = await prisma.user.findUnique({
+    where: {
+      email,
+    },
+  });
 
+  if (user) {
+    throw {
+      status: 500,
+      message: "Email already exists",
+    };
+  }
 
-export const userRegister = async (request: FastifyRequest<Register>, _: FastifyReply) => {
-    const { email, password, name } = request.body || {};
-    if (!email || !password || !name) {
-        throw {
-            status: 500,
-            message: "Name, email or password is missing",
-        };
-    }
+  const hashedPassword = await bcrypt.hash(password, 12);
 
-    const user = await prisma.user.findUnique({
-        where: {
-            email
-        }
-    })
+  const newUser = await prisma.user.create({
+    data: {
+      email,
+      password: hashedPassword,
+      name,
+    },
+  });
 
-    if(user) {
-        throw {
-            status: 500,
-            message: "Email already exists"
-        };
-    }
+  const userCount = await prisma.user.count();
+  if (userCount === 1) {
+    // this is the first user, make them an admin
+    await prisma.user.update({
+      where: {
+        id: newUser.id,
+      },
+      data: {
+        isAdmin: true,
+        role: "ADMIN",
+      },
+    });
+    // generate settings
+    await prisma.applicationSetting.create({
+      data: {},
+    });
+  }
 
-    const hashedPassword = await bcrypt.hash(password, 12);
+  const payload = {
+    userId: newUser.id,
+    email: newUser.email,
+    name: newUser.name,
+  };
 
-    const newUser = await prisma.user.create({
-        data: {
-            email,
-            password: hashedPassword,
-            name
-        }
-    })
-
-    const payload = {
-        userId: newUser.id,
-        email: newUser.email,
-        name: newUser.name,
-    }
-
-    return payload;
-}
+  return payload;
+};

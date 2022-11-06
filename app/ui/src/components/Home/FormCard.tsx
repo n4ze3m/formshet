@@ -41,9 +41,10 @@ export function FormCard(data: any) {
         }}
       >
         <Text size="sm" color="dimmed">
-          0 Submissions in last 24 hours
+          {`${data?._count?.submission} submissions in last 24 hours`}
         </Text>
       </Group>
     </Card>
   );
+
 }

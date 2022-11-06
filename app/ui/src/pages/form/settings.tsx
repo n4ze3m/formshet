@@ -1,9 +1,11 @@
 import React from "react";
+import { FormSettingsBody } from "../../components/Form";
 
 export function FormSettings() {
     return (
         <div>
-            <h1>Form Settings</h1>
+            <title>Form Settings</title>
+            <FormSettingsBody />
         </div>
     )
 }

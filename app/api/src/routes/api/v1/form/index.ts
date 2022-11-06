@@ -8,7 +8,8 @@ import {
   verifySheet,
   getUserFormIntergation,
   updateFormIntergation,
-  getUserFormCode
+  getUserFormCode,
+  getUserFormSettings,
 } from "./handlers";
 import {
   DeleteSheetForm,
@@ -35,21 +36,29 @@ const root: FastifyPluginAsync = async (fastify): Promise<void> => {
     getUserFormIntergation
   );
   // api to update integration from third party
-    fastify.put<SheetByIDUpdate>(
+  fastify.put<SheetByIDUpdate>(
     "/:formId/integration",
     {
-        onRequest: [fastify.authenticate],
+      onRequest: [fastify.authenticate],
     },
     updateFormIntergation
-    );
-    // api to get code from third party
-    fastify.get<GetSheetByID>(
+  );
+  // api to get code from third party
+  fastify.get<GetSheetByID>(
     "/:formId/code",
     {
-        onRequest: [fastify.authenticate],
+      onRequest: [fastify.authenticate],
     },
     getUserFormCode
-    );
+  );
+  // api tp get form settings
+  fastify.get<GetSheetByID>(
+    "/:formId/settings",
+    {
+      onRequest: [fastify.authenticate],
+    },
+    getUserFormSettings
+  );
 
   // api to submit form from frontend
   fastify.post<SubmitSheetForm>("/:id/submit", submitSheetForm);

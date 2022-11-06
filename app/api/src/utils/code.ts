@@ -9,7 +9,10 @@ export const generateHTMLCode = (id: string, headers: string[][]) => {
         ${headers
           .map((element) =>
             element
-              .map((header) => `<input type="text" name="${header}" />`)
+              .map(
+                (header) =>
+                  `<input type="text" name="${header}" placeholder="Enter ${header}" />`
+              )
               .join("\n")
           )
           .join("")}

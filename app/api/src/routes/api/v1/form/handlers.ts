@@ -1,10 +1,12 @@
 import { FastifyReply, FastifyRequest } from "fastify";
+import dayjs from "dayjs";
 import { generateHTMLCode } from "../../../../utils/code";
 import { prisma } from "../../../../utils/common";
 import {
   convertToArrayOfObject,
   convertToArrayOfRow,
 } from "../../../../utils/digest";
+import { generateApiKey } from "../../../../utils/key";
 import {
   getSheetHeaders,
   getSheetId,
@@ -18,6 +20,7 @@ import {
   SubmitSheetForm,
   VerifySheet,
 } from "./types";
+import { randomUUID } from "crypto";
 
 // formshit@ivisit-283003.iam.gserviceaccount.com
 
@@ -101,24 +104,45 @@ export const submitSheetForm = async (
       error: "No data provided",
     });
   }
+
+  const form = await prisma.form.findFirst({
+    where: {
+      publicId: id,
+    },
+  });
+
+  if (!form) {
+    return reply.status(404).send({
+      message: "Form not found",
+    });
+  }
+
+  const sheetId = form.sheetId;
+
   const sheet = await googleSheet();
   // get column names
   const columnNames = await sheet.spreadsheets.values.get({
-    spreadsheetId: id,
+    spreadsheetId: sheetId,
     range: "A1:Z1",
   });
 
   const row = convertToArrayOfRow(columnNames.data.values || [], data);
   // append row
   await sheet.spreadsheets.values.append({
-    spreadsheetId: id,
+    spreadsheetId: sheetId,
     range: "A2:Z",
     valueInputOption: "USER_ENTERED",
     requestBody: {
       values: [row],
     },
   });
-
+  // after this let's send a response and save a snapshot of the data
+  await prisma.formSubmission.create({
+    data: {
+      data: JSON.stringify(data),
+      formId: form.id,
+    },
+  });
   return {
     message: "Thanks for submitting the form",
   };
@@ -184,6 +208,7 @@ export const createSheet = async (
     });
     const name = sheetName.data.properties?.title || "Untitled Sheet";
     const { userId } = request.user;
+    const accessKey = generateApiKey();
 
     const newForm = await prisma.form.create({
       data: {
@@ -191,6 +216,7 @@ export const createSheet = async (
         sheetId: id,
         sheetUrl: url,
         userId,
+        accessKey,
       },
     });
 
@@ -210,12 +236,33 @@ export const getUserForms = async (
   _: FastifyReply
 ) => {
   const { userId } = request.user;
+  // last 24 hours start and end using dayjs
+  const start = dayjs().subtract(1, "day").startOf("day").toDate();
+  const end = dayjs().subtract(1, "day").endOf("day").toDate();
   const forms = await prisma.form.findMany({
     where: {
       userId,
     },
     orderBy: {
       createdAt: "desc",
+    },
+    include: {
+      _count: {
+        select: {
+          submission: true,
+        },
+      },
+      submission: {
+        select: {
+          id: true,
+        },
+        where: {
+          createdAt: {
+            gte: start.toISOString(),
+            lte: end.toISOString(),
+          },
+        },
+      },
     },
   });
   return forms;
@@ -335,7 +382,7 @@ export const getUserFormCode = async (
 ) => {
   try {
     const { formId } = request.params;
-    const { userId, email } = request.user;
+    const { userId } = request.user;
     const form = await prisma.form.findFirst({
       where: {
         id: formId,
@@ -351,7 +398,7 @@ export const getUserFormCode = async (
     const id = form.sheetId;
     const headers = await getSheetHeaders(id);
 
-    const htmlCode = generateHTMLCode(id, headers);
+    const htmlCode = generateHTMLCode(form.publicId, headers);
 
     return [
       {
@@ -366,4 +413,72 @@ export const getUserFormCode = async (
       error: "Something went wrong",
     });
   }
+};
+
+export const getUserFormSettings = async (
+  request: FastifyRequest<GetSheetByID>,
+  reply: FastifyReply
+) => {
+  const { formId } = request.params;
+  const { userId } = request.user;
+  const form = await prisma.form.findFirst({
+    where: {
+      id: formId,
+      userId,
+    },
+  });
+
+  if (!form) {
+    return reply.status(404).send({
+      message: "Form not found",
+    });
+  }
+
+  const settings = [
+    {
+      id: 1,
+      label: "Form Name",
+      trigger: "name",
+      type: "text",
+      value: form.name,
+    },
+    {
+      id: 2,
+      label: "Form Submissions",
+      trigger: "submissions",
+      type: "switch",
+      value: form.disabled,
+    },
+    {
+      id: 3,
+      label: "Form Public API",
+      trigger: "public",
+      type: "switch",
+      value: form.publicAccess,
+    },
+    {
+      id: 4,
+      label: "Form Public ID",
+      trigger: "publicId",
+      type: "copy",
+      value: form.publicId,
+    },
+    {
+      id: 5,
+      label: "Form Access Key",
+      trigger: "accessKey",
+      type: "copy",
+      value: form.accessKey,
+    },
+    {
+      id: 6,
+      label: "Delete Form",
+      trigger: "delete",
+      type: "delete",
+      value: form.id,
+    },
+  ];
+
+
+  return settings;
 };

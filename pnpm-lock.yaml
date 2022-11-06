@@ -19,6 +19,7 @@ importers:
       '@types/node': ^18.7.16
       '@types/prettier': ^2.7.1
       bcryptjs: ^2.4.3
+      dayjs: ^1.11.6
       fastify: ^4.5.3
       fastify-plugin: ^4.2.1
       googleapis: ^107.0.0
@@ -39,6 +40,7 @@ importers:
       '@fastify/multipart': 7.1.2
       '@prisma/client': 4.3.1_prisma@4.3.1
       bcryptjs: 2.4.3
+      dayjs: 1.11.6
       fastify: 4.5.3
       fastify-plugin: 4.2.1
       googleapis: 107.0.0
@@ -1286,6 +1288,10 @@ packages:
 
   /csstype/3.1.1:
     resolution: {integrity: sha512-DJR/VvkAvSZW9bTouZue2sSxDwdTN92uHjqeKVm+0dAqdfNykRzQ95tay8aXMBAAPpUiq4Qcug2L7neoRh2Egw==}
+
+  /dayjs/1.11.6:
+    resolution: {integrity: sha512-zZbY5giJAinCG+7AGaw0wIhNZ6J8AhWuSXKvuc1KAyMiRsvGQWqh4L+MomvhdAYjN+lqvVCMq1I41e3YHvXkyQ==}
+    dev: false
 
   /debug/3.2.7_supports-color@5.5.0:
     resolution: {integrity: sha512-CFjzYYAi4ThfiQvizrFQevTTXHtnCqWfe7x1AhgEscTz6ZbLbfoLRLPugTQyBth6f8ZERVUSyWHFD/7Wu4t1XQ==}
