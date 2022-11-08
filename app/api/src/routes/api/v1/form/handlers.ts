@@ -236,9 +236,7 @@ export const getUserForms = async (
   _: FastifyReply
 ) => {
   const { userId } = request.user;
-  // last 24 hours start and end using dayjs
-  const start = dayjs().subtract(1, "day").startOf("day").toDate();
-  const end = dayjs().subtract(1, "day").endOf("day").toDate();
+
   const forms = await prisma.form.findMany({
     where: {
       userId,
@@ -250,19 +248,9 @@ export const getUserForms = async (
       _count: {
         select: {
           submission: true,
-        },
+        }
       },
-      submission: {
-        select: {
-          id: true,
-        },
-        where: {
-          createdAt: {
-            gte: start.toISOString(),
-            lte: end.toISOString(),
-          },
-        },
-      },
+      submission: true,
     },
   });
   return forms;
@@ -364,6 +352,12 @@ export const deleteForm = async (
       error: "Form not found",
     });
   }
+
+  await prisma.formSubmission.deleteMany({
+    where: {
+      formId: id,
+    }
+  });
 
   await prisma.form.delete({
     where: {
