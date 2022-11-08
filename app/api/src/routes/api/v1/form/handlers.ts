@@ -20,7 +20,6 @@ import {
   SubmitSheetForm,
   VerifySheet,
 } from "./types";
-import { randomUUID } from "crypto";
 
 // formshit@ivisit-283003.iam.gserviceaccount.com
 
@@ -108,6 +107,7 @@ export const submitSheetForm = async (
   const form = await prisma.form.findFirst({
     where: {
       publicId: id,
+      disabled: false,
     },
   });
 
@@ -434,51 +434,84 @@ export const getUserFormSettings = async (
     });
   }
 
-  const settings = [
+  const formSettings = [
     {
       id: 1,
       label: "Form Name",
       trigger: "name",
       type: "text",
       value: form.name,
+      blur: false,
     },
     {
       id: 2,
-      label: "Form Submissions",
+      label: "Disable Submissions",
       trigger: "submissions",
       type: "switch",
       value: form.disabled,
+      blur: false,
     },
     {
       id: 3,
-      label: "Form Public API",
+      label: "Enable Public Access",
       trigger: "public",
       type: "switch",
       value: form.publicAccess,
+      blur: false,
     },
+  ];
+
+  const formApiSettings = [
     {
       id: 4,
-      label: "Form Public ID",
+      label: "Public ID",
       trigger: "publicId",
       type: "copy",
+      blur: !form.publicAccess,
       value: form.publicId,
     },
     {
       id: 5,
-      label: "Form Access Key",
+      label: "Public Access Key",
       trigger: "accessKey",
       type: "copy",
+      blur: !form.publicAccess,
       value: form.accessKey,
-    },
-    {
-      id: 6,
-      label: "Delete Form",
-      trigger: "delete",
-      type: "delete",
-      value: form.id,
     },
   ];
 
+  const settings = {
+    formSettings,
+    formApiSettings,
+    isPublic: form.publicAccess,
+  };
 
   return settings;
+};
+
+export const updateFormSettings = async (
+  request: FastifyRequest<SheetByIDUpdate>,
+  reply: FastifyReply
+) => {
+  try {
+    const { formId } = request.params;
+    const { userId } = request.user;
+    const body = request.body;
+    const form = await prisma.form.findFirst({
+      where: {
+        id: formId,
+        userId,
+      },
+    });
+
+    if (!form) {
+      return reply.status(404).send({
+        message: "Form not found",
+      });
+    }
+  } catch (e) {
+    return reply.status(500).send({
+      error: "Something went wrong",
+    });
+  }
 };
