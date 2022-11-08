@@ -509,6 +509,47 @@ export const updateFormSettings = async (
         message: "Form not found",
       });
     }
+
+    Object.keys(body).forEach(async (key) => {
+      switch (key) {
+        case "1":
+          await prisma.form.update({
+            where: {
+              id: formId,
+            },
+            data: {
+              name: body[key].toString(),
+            },
+          });
+          break;
+        case "2":
+          await prisma.form.update({
+            where: {
+              id: formId,
+            },
+            data: {
+              disabled: body[key] as boolean,
+            },
+          });
+          break;
+        case "3":
+          await prisma.form.update({
+            where: {
+              id: formId,
+            },
+            data: {
+              publicAccess: body[key] as boolean,
+            },
+          });
+          break;
+        default:
+          break;
+      }
+    });
+
+    return {
+      message: "Settings updated successfully",
+    };
   } catch (e) {
     return reply.status(500).send({
       error: "Something went wrong",

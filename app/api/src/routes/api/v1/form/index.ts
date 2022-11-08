@@ -10,6 +10,7 @@ import {
   updateFormIntergation,
   getUserFormCode,
   getUserFormSettings,
+  updateFormSettings,
 } from "./handlers";
 import {
   DeleteSheetForm,
@@ -58,6 +59,14 @@ const root: FastifyPluginAsync = async (fastify): Promise<void> => {
       onRequest: [fastify.authenticate],
     },
     getUserFormSettings
+  );
+  // api to update form settings
+  fastify.put<SheetByIDUpdate>(
+    "/:formId/settings",
+    {
+      onRequest: [fastify.authenticate],
+    },
+    updateFormSettings
   );
 
   // api to submit form from frontend

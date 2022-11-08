@@ -17,7 +17,6 @@ export function FormIntergationBody() {
     };
 
     const updateIntergationData = async (data: any) => {
-        console.log(data)
         const response = await api.put(`/form/${param.id}/integration`, data);
         return response.data
     }
