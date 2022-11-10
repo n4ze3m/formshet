@@ -53,13 +53,13 @@ export const SettingType = ({ id, type, value, onChange, blur }: IProps) => {
           <Input
             key={id}
             value={value as string}
-            readOnly
+            readOnly={true}
             rightSection={
               <CopyButton key={id} value={value as string} timeout={2000}>
                 {({ copied, copy }) => (
                   <Tooltip
                     label={copied ? "Copied" : "Copy"}
-                    withArrow
+                    withArrow={true}
                     position="right"
                   >
                     <ActionIcon color={copied ? "teal" : "gray"} onClick={copy}>

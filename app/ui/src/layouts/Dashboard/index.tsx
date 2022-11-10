@@ -199,7 +199,7 @@ export default function DashboardLayout() {
       })}
       navbarOffsetBreakpoint="sm"
       asideOffsetBreakpoint="sm"
-      fixed
+      fixed={true}
       header={
         <Header height={HEADER_HEIGHT}>
           <Container className={classes.inner}>
@@ -246,7 +246,9 @@ export default function DashboardLayout() {
                 </UnstyledButton>
               </Menu.Target>
               <Menu.Dropdown>
-                <Menu.Item icon={<Settings size={14} />}>Settings</Menu.Item>
+                <Menu.Item 
+                onClick={() => navigate("/settings")}
+                icon={<Settings size={14} />}>Settings</Menu.Item>
                 <Menu.Divider />
                 <Menu.Label>Danger zone</Menu.Label>
                 <Menu.Item
@@ -269,7 +271,7 @@ export default function DashboardLayout() {
             hidden={!opened}
             width={{ sm: 200, lg: 250 }}
           >
-            <Navbar.Section grow>
+            <Navbar.Section grow={true}>
               {data.map(({ icon, color, label, path }) => (
                 <MainLink
                   key={label}

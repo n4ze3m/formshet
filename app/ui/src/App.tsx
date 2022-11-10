@@ -9,6 +9,7 @@ import { Home } from "./pages/home";
 import { Login } from "./pages/login";
 import { New } from "./pages/new";
 import { Register } from "./pages/register";
+import { Settings } from "./pages/settings";
 
 export default function App() {
   return (
@@ -16,6 +17,7 @@ export default function App() {
       <Route path="/" element={<DashboardLayout />}>
         <Route path="/" element={<Home />} />
         <Route path="/new" element={<New />} />
+        <Route path="/settings" element={<Settings />} />
         <Route path="/form/:id" element={<FormHome />} />
         <Route path="/form/:id/intergation" element={<FormIntergation />} />
         <Route path="/form/:id/code" element={<FormCode />} />

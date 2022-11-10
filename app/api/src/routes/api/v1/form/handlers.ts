@@ -506,7 +506,7 @@ export const updateFormSettings = async (
 
     Object.keys(body).forEach(async (key) => {
       switch (key) {
-        case "1":
+        case "1": {
           await prisma.form.update({
             where: {
               id: formId,
@@ -516,7 +516,8 @@ export const updateFormSettings = async (
             },
           });
           break;
-        case "2":
+        }
+        case "2": {
           await prisma.form.update({
             where: {
               id: formId,
@@ -526,7 +527,8 @@ export const updateFormSettings = async (
             },
           });
           break;
-        case "3":
+        }
+        case "3": {
           await prisma.form.update({
             where: {
               id: formId,
@@ -536,6 +538,7 @@ export const updateFormSettings = async (
             },
           });
           break;
+        }
         default:
           break;
       }

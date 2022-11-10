@@ -13,8 +13,8 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
     <BrowserRouter>
       <QueryClientProvider client={queryClient}>
         <MantineProvider
-          withGlobalStyles
-          withNormalizeCSS
+          withGlobalStyles={true}
+          withNormalizeCSS={true}
           theme={{
             colorScheme: "dark",
             fontFamily: "Poppins",
