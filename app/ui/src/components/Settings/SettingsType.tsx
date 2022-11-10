@@ -2,17 +2,20 @@ import { Switch, TextInput } from "@mantine/core";
 
 type IProps = {
 	id: string;
+	label: string;
 	type: string;
 	value: string | boolean | number;
 	onChange: (value?: any) => void;
 };
 
-export const SettingType = ({ id, type, value, onChange }: IProps) => {
+export const SettingType = ({ id, type, value, onChange, label }: IProps) => {
 	switch (type) {
 		case "input":
 			return (
 				<TextInput
 					key={id}
+					label={label}
+					mb="md"
 					value={value as string}
 					placeholder="Enter Text"
 					style={{
@@ -25,6 +28,9 @@ export const SettingType = ({ id, type, value, onChange }: IProps) => {
 			return (
 				<Switch
 					key={id}
+					labelPosition="right"
+					label={label}
+					mb="md"
 					checked={value as boolean}
 					onChange={(e) => onChange(e.currentTarget.checked)}
 				/>

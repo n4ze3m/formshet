@@ -1,4 +1,12 @@
-import { Button, Card, Divider, Group, Paper } from "@mantine/core";
+import {
+	Button,
+	Card,
+	Divider,
+	Group,
+	Paper,
+	PasswordInput,
+} from "@mantine/core";
+import { useForm } from "@mantine/form";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import React from "react";
 import { File } from "tabler-icons-react";
@@ -21,6 +29,14 @@ export const SettingsBody = () => {
 		return response.data;
 	};
 
+	const pwdForm = useForm({
+		initialValues: {
+			currentPassword: "",
+			newPassword: "",
+			confirmPassword: "",
+		},
+	});
+
 	const { data: settingsData, status: settingsStatus } = useQuery(
 		["fetchSettingsData"],
 		fetchData,
@@ -41,9 +57,10 @@ export const SettingsBody = () => {
 					<Divider my="md" variant="dashed" label="Profile" />
 					<Paper p={"md"}>
 						{profileBlock.map((item) => (
-							<Card mb="md" radius="md" key={item.id.toString()}>
+							<div key={item.id.toString()}>
 								<SettingType
 									id={item.id.toString()}
+									label={item.label}
 									type={item.type}
 									value={item.value}
 									onChange={(value) => {
@@ -60,7 +77,7 @@ export const SettingsBody = () => {
 										setProfileBlock(updateProfileBlock);
 									}}
 								/>
-							</Card>
+							</div>
 						))}
 						<Group position="right">
 							<Button color="teal" leftIcon={<File />}>
@@ -68,6 +85,64 @@ export const SettingsBody = () => {
 							</Button>
 						</Group>
 					</Paper>
+					<Divider my="md" variant="dashed" label="Update Password" />
+					<Paper p={"md"}>
+						<form>
+							<PasswordInput
+								label="Current Password"
+								required={true}
+								{...pwdForm.getInputProps("currentPassword")}
+							/>
+							<PasswordInput
+								label="New Password"
+								required={true}
+								{...pwdForm.getInputProps("newPassword")}
+							/>
+							<PasswordInput
+								label="Confirm Password"
+								required={true}
+								{...pwdForm.getInputProps("confirmPassword")}
+							/>
+							<Group mt="md" position="right">
+								<Button color="teal" leftIcon={<File />}>
+									Save
+								</Button>
+							</Group>
+						</form>
+					</Paper>
+					{settingsData.isAdmin && (
+						<>
+							<Divider my="md" variant="dashed" label="Admin" />
+							<Paper p={"md"}>
+								{adminBlock.map((item) => (
+									<div key={item.id.toString()}>
+										<SettingType
+											id={item.id.toString()}
+											label={item.label}
+											type={item.type}
+											value={item.value}
+											onChange={(value) => {
+												// update the list
+												const index = adminBlock.findIndex(
+													(i) => i.id === item.id,
+												);
+												const updateAdminBlock = [...adminBlock];
+												updateAdminBlock[index].value = value;
+												setProfileChange({
+													[item.id]: value,
+												});
+											}}
+										/>
+									</div>
+								))}
+								<Group mt="md" position="right">
+									<Button color="teal" leftIcon={<File />}>
+										Save
+									</Button>
+								</Group>
+							</Paper>
+						</>
+					)}
 				</div>
 			)}
 		</div>
