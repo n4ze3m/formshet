@@ -17,3 +17,15 @@ RUN apt update && apt -y install --no-install-recommends ca-certificates git git
 RUN apt-get clean autoclean && apt-get autoremove --yes && rm -rf /var/lib/{apt,dpkg,cache,log}/
 RUN npm --no-update-notifier --no-fund --global install pnpm@7.14.2
 RUN npm install -g npm@@7.14.2
+# Copy API
+COPY --from=build /app/app/api/build/ .
+COPY --from=build /app/app/api/prisma/ ./prisma
+COPY --from=build /app/app/api/package.json .
+# Copy UI
+COPY --from=build /app/app/ui/dist/ ./public
+
+RUN pnpm install -p
+
+EXPOSE 3000
+
+CMD ["pnpm", "start"]
