@@ -1,5 +1,5 @@
 export const convertToArrayOfObject = (columns: any[][], rows: any[][]) => {
-    const result: any = [];
+    const result = [];
     for (let i = 0; i < rows.length; i++) {
         const row = rows[i];
         const obj: any = {};

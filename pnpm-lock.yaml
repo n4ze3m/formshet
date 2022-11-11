@@ -15,6 +15,7 @@ importers:
       '@fastify/jwt': ^6.3.2
       '@fastify/multipart': ^7.1.2
       '@prisma/client': ^4.3.1
+      '@trycourier/courier': ^4.1.0
       '@types/bcryptjs': ^2.4.2
       '@types/node': ^18.7.16
       '@types/prettier': ^2.7.1
@@ -23,6 +24,7 @@ importers:
       fastify: ^4.5.3
       fastify-plugin: ^4.2.1
       googleapis: ^107.0.0
+      markdown-table: workspace:*
       nanoid: ^4.0.0
       nodemon: ^2.0.19
       prettier: ^2.7.1
@@ -39,11 +41,13 @@ importers:
       '@fastify/jwt': 6.3.2
       '@fastify/multipart': 7.1.2
       '@prisma/client': 4.3.1_prisma@4.3.1
+      '@trycourier/courier': 4.1.0
       bcryptjs: 2.4.3
       dayjs: 1.11.6
       fastify: 4.5.3
       fastify-plugin: 4.2.1
       googleapis: 107.0.0
+      markdown-table: link:../../packages/markdown-table
       nanoid: 4.0.0
       prettier: 2.7.1
     devDependencies:
@@ -98,6 +102,21 @@ importers:
       '@vitejs/plugin-react': 2.1.0_vite@3.1.2
       typescript: 4.8.3
       vite: 3.1.2
+
+  packages/markdown-table:
+    specifiers:
+      markdown-table: ^3.0.2
+      rimraf: ^3.0.2
+      ts-node: ^10.9.1
+      tsc: ^2.0.4
+      typescript: ^4.8.4
+    dependencies:
+      markdown-table: 3.0.2
+    devDependencies:
+      rimraf: 3.0.2
+      ts-node: 10.9.1_typescript@4.8.4
+      tsc: 2.0.4
+      typescript: 4.8.4
 
 packages:
 
@@ -922,6 +941,14 @@ packages:
       use-sync-external-store: 1.2.0_react@18.2.0
     dev: false
 
+  /@trycourier/courier/4.1.0:
+    resolution: {integrity: sha512-RLssIXIwuGNxAYKuap95mD38M5HHyaxPyalSwr/yrrqlHOWofDH15yFHB4AnYj5na+7z+22ruRmwl7LYwpFZZw==}
+    dependencies:
+      cross-fetch: 3.1.5
+    transitivePeerDependencies:
+      - encoding
+    dev: false
+
   /@tsconfig/node10/1.0.9:
     resolution: {integrity: sha512-jNsYVVxU8v5g43Erja32laIDHXeoNvFEpX33OK4d6hljo3jDhCBDhx5dhCCTMWUojscpAagGiRkBKxpdl9fxqA==}
     dev: true
@@ -1277,6 +1304,14 @@ packages:
   /create-require/1.1.1:
     resolution: {integrity: sha512-dcKFX3jn0MpIaXjisoRvexIJVEKzaq7z2rZKxf+MSr9TkdmHmsU4m2lcLojrj/FHl8mk5VxMmYA+ftRkP/3oKQ==}
     dev: true
+
+  /cross-fetch/3.1.5:
+    resolution: {integrity: sha512-lvb1SBsI0Z7GDwmuid+mU3kWVBwTVUbe7S0H52yaaAdQOXq2YktTCZdlAcNKFzE6QtRz0snpw9bNiPeOIkkQvw==}
+    dependencies:
+      node-fetch: 2.6.7
+    transitivePeerDependencies:
+      - encoding
+    dev: false
 
   /csstype/3.0.9:
     resolution: {integrity: sha512-rpw6JPxK6Rfg1zLOYCSwle2GFOOsnjmDYDaBwEcwoOg4qlsIVCN789VkBZDJAGi4T07gI4YSutR43t9Zz4Lzuw==}
@@ -2090,6 +2125,10 @@ packages:
     resolution: {integrity: sha512-s8UhlNe7vPKomQhC1qFelMokr/Sc3AgNbso3n74mVPA5LTZwkB9NlXf4XPamLxJE8h0gh73rM94xvwRT2CVInw==}
     dev: true
 
+  /markdown-table/3.0.2:
+    resolution: {integrity: sha512-y8j3a5/DkJCmS5x4dMCQL+OR0+2EAq3DOtio1COSHsmW2BGXnNCK3v12hJt1LrUz5iZH5g0LmuYOjDdI+czghA==}
+    dev: false
+
   /mime-db/1.52.0:
     resolution: {integrity: sha512-sPU4uV7dYlvtWJxwwxHD0PuihVNiE7TyAbQ5SWxDCB9mUYvOgroQOwYQQOKPJ8CIbE+1ETVlOoK1UC2nU3gYvg==}
     engines: {node: '>= 0.6'}
@@ -2729,12 +2768,53 @@ packages:
       yn: 3.1.1
     dev: true
 
+  /ts-node/10.9.1_typescript@4.8.4:
+    resolution: {integrity: sha512-NtVysVPkxxrwFGUUxGYhfux8k78pQB3JqYBXlLRZgdGUqTO5wU/UyHop5p70iEbGhB7q5KmiZiU0Y3KlJrScEw==}
+    hasBin: true
+    peerDependencies:
+      '@swc/core': '>=1.2.50'
+      '@swc/wasm': '>=1.2.50'
+      '@types/node': '*'
+      typescript: '>=2.7'
+    peerDependenciesMeta:
+      '@swc/core':
+        optional: true
+      '@swc/wasm':
+        optional: true
+    dependencies:
+      '@cspotcode/source-map-support': 0.8.1
+      '@tsconfig/node10': 1.0.9
+      '@tsconfig/node12': 1.0.11
+      '@tsconfig/node14': 1.0.3
+      '@tsconfig/node16': 1.0.3
+      acorn: 8.8.0
+      acorn-walk: 8.2.0
+      arg: 4.1.3
+      create-require: 1.1.1
+      diff: 4.0.2
+      make-error: 1.3.6
+      typescript: 4.8.4
+      v8-compile-cache-lib: 3.0.1
+      yn: 3.1.1
+    dev: true
+
+  /tsc/2.0.4:
+    resolution: {integrity: sha512-fzoSieZI5KKJVBYGvwbVZs/J5za84f2lSTLPYf6AGiIf43tZ3GNrI1QzTLcjtyDDP4aLxd46RTZq1nQxe7+k5Q==}
+    hasBin: true
+    dev: true
+
   /tslib/2.4.0:
     resolution: {integrity: sha512-d6xOpEDfsi2CZVlPQzGeux8XMwLT9hssAsaPYExaQMuYskwb+x1x7J371tWlbBdWHroy99KnVB6qIkUbs5X3UQ==}
     dev: false
 
   /typescript/4.8.3:
     resolution: {integrity: sha512-goMHfm00nWPa8UvR/CPSvykqf6dVV8x/dp0c5mFTMTIu0u0FlGWRioyy7Nn0PGAdHxpJZnuO/ut+PpQ8UiHAig==}
+    engines: {node: '>=4.2.0'}
+    hasBin: true
+    dev: true
+
+  /typescript/4.8.4:
+    resolution: {integrity: sha512-QCh+85mCy+h0IGff8r5XWzOVSbBO+KfeYrMQh7NJ58QujwcE22u+NUSmUxqF+un70P9GXKxa2HCNiTTMJknyjQ==}
     engines: {node: '>=4.2.0'}
     hasBin: true
     dev: true
