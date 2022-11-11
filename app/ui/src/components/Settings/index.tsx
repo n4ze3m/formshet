@@ -7,10 +7,12 @@ import {
 	PasswordInput,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { showNotification } from "@mantine/notifications";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import React from "react";
 import { File } from "tabler-icons-react";
 import api from "../../service/api";
+import { handleError } from "../../utils/error";
 import { SettingType } from "./SettingsType";
 
 type ISettingsProps = {
@@ -21,8 +23,10 @@ type ISettingsProps = {
 };
 
 export const SettingsBody = () => {
+	const client = useQueryClient();
 	const [profileBlock, setProfileBlock] = React.useState<ISettingsProps[]>([]);
 	const [profileChange, setProfileChange] = React.useState({});
+	const [adminChange, setAdminChange] = React.useState({});
 	const [adminBlock, setAdminBlock] = React.useState<ISettingsProps[]>([]);
 	const fetchData = async () => {
 		const response = await api.get("/user/settings");
@@ -33,7 +37,7 @@ export const SettingsBody = () => {
 		initialValues: {
 			currentPassword: "",
 			newPassword: "",
-			confirmPassword: "",
+			confPassword: "",
 		},
 	});
 
@@ -48,6 +52,52 @@ export const SettingsBody = () => {
 		},
 	);
 
+	const updateProfile = async (data: any) => {
+		const response = await api.post("/user/settings/profile", data);
+		return response.data;
+	};
+
+	const updateAdmin = async (data: any) => {
+		const response = await api.post("/user/settings/admin", data);
+		return response.data;
+	};
+
+	const updateUserPassword = async (data: any) => {
+		const response = await api.post("/user/settings/password", data);
+		return response.data;
+	};
+
+	const { mutate: updateProfileMutation, isLoading: isProfileUpdating } =
+		useMutation(updateProfile, {
+			onSuccess: (data) => {
+				client.invalidateQueries(["fetchSettingsData"]);
+				showNotification({
+					message: "Your profile has been updated successfully",
+				});
+			},
+			onError: (error) => handleError(error),
+		});
+	const { mutate: updateAdminMutation, isLoading: isAdminUpdating } =
+		useMutation(updateAdmin, {
+			onSuccess: (data) => {
+				client.invalidateQueries(["fetchSettingsData"]);
+				showNotification({
+					message: "Your profile has been updated successfully",
+				});
+			},
+			onError: (error) => handleError(error),
+		});
+
+	const { mutate: updateUserPasswordMutation, isLoading: isPasswordUpdating } =
+		useMutation(updateUserPassword, {
+			onSuccess: (data) => {
+				client.invalidateQueries(["fetchSettingsData"]);
+				showNotification({
+					message: "Your password has been updated successfully",
+				});
+			},
+			onError: (error) => handleError(error),
+		});
 	return (
 		<div>
 			{settingsStatus === "loading" && <div>Loading...</div>}
@@ -80,14 +130,23 @@ export const SettingsBody = () => {
 							</div>
 						))}
 						<Group position="right">
-							<Button color="teal" leftIcon={<File />}>
-								Save
+							<Button
+								color="teal"
+								leftIcon={<File />}
+								onClick={() => updateProfileMutation(profileChange)}
+								loading={isProfileUpdating}
+							>
+								Update Profile
 							</Button>
 						</Group>
 					</Paper>
 					<Divider my="md" variant="dashed" label="Update Password" />
 					<Paper p={"md"}>
-						<form>
+						<form
+							onSubmit={pwdForm.onSubmit((data: any) => {
+								updateUserPasswordMutation(data);
+							})}
+						>
 							<PasswordInput
 								label="Current Password"
 								required={true}
@@ -101,11 +160,16 @@ export const SettingsBody = () => {
 							<PasswordInput
 								label="Confirm Password"
 								required={true}
-								{...pwdForm.getInputProps("confirmPassword")}
+								{...pwdForm.getInputProps("confPassword")}
 							/>
 							<Group mt="md" position="right">
-								<Button color="teal" leftIcon={<File />}>
-									Save
+								<Button
+									loading={isPasswordUpdating}
+									type="submit"
+									color="teal"
+									leftIcon={<File />}
+								>
+									Update Password
 								</Button>
 							</Group>
 						</form>
@@ -128,7 +192,7 @@ export const SettingsBody = () => {
 												);
 												const updateAdminBlock = [...adminBlock];
 												updateAdminBlock[index].value = value;
-												setProfileChange({
+												setAdminChange({
 													[item.id]: value,
 												});
 											}}
@@ -136,8 +200,13 @@ export const SettingsBody = () => {
 									</div>
 								))}
 								<Group mt="md" position="right">
-									<Button color="teal" leftIcon={<File />}>
-										Save
+									<Button
+										onClick={() => updateAdminMutation(adminChange)}
+										loading={isAdminUpdating}
+										color="teal"
+										leftIcon={<File />}
+									>
+										Update Admin Settings
 									</Button>
 								</Group>
 							</Paper>

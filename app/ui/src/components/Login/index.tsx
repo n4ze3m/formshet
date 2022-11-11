@@ -65,18 +65,18 @@ export function LoginBody() {
       >
         Login to FormShet
       </Title>
-      <Paper withBorder shadow="md" p={30} mt={30} radius="md">
+      <Paper withBorder={true} shadow="md" p={30} mt={30} radius="md">
         <form onSubmit={form.onSubmit(async (values) => await login(values))}>
           <TextInput
             label="Email"
             placeholder="you@email.com"
-            required
+            required={true}
             {...form.getInputProps("email")}
           />
           <PasswordInput
             label="Password"
             placeholder="Your password"
-            required
+            required={true}
             mt="md"
             {...form.getInputProps("password")}
           />
@@ -84,7 +84,7 @@ export function LoginBody() {
             type="submit"
             loading={isLoading}
             color="teal"
-            fullWidth
+            fullWidth={true}
             mt="xl"
           >
             Login
