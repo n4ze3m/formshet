@@ -6,9 +6,15 @@
     "api:dev": "pnpm run --filter api dev",
     "ui:dev": "pnpm run --filter ui dev",
     "dev": "pnpm --stream -r run dev",
-    "start": "pnpm --stream -r run dev"
+    "start": "pnpm --stream -r run dev",
+    "build": "run-p -n build:*",
+    "build:api": "pnpm run --filter api build",
+    "build:ui": "pnpm run --filter ui build"
   },
   "keywords": [],
   "author": "",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "npm-run-all": "^4.1.5"
+  }
 }
