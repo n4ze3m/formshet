@@ -1,7 +1,7 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 import { prisma } from "../../../../utils/common";
 import { Login, Register, SettingsUpdates, UpdatePassword } from "./types";
-import bcrypt from "bcryptjs";
+import * as bcrypt from "bcryptjs";
 
 export const userLogin = async (
 	request: FastifyRequest<Login>,

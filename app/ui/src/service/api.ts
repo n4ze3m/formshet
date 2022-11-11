@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { getToken } from './cookie';
 
-const baseURL = 'http://localhost:3000/api/v1';
+const baseURL = import.meta.env.VITE_API_URL || '/api/v1';
 
 const instance = axios.create({
     baseURL,

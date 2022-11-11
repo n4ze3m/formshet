@@ -4,6 +4,7 @@ import env from "@fastify/env";
 import autoload from "@fastify/autoload";
 import formbody from "@fastify/formbody";
 import multipart from "@fastify/multipart";
+import serve from "@fastify/static";
 import * as path from "path";
 
 declare module "fastify" {
@@ -29,9 +30,21 @@ const main = async () => {
 	app.register(formbody);
 	// enable multipart
 	app.register(multipart, { attachFieldsToBody: true });
-	// enable jwt
-
-	// load env
+	// server static file
+	if (process.env.NODE_ENV === "production") {
+		app.register(serve, {
+			root: path.join(__dirname, "./public"),
+			preCompressed: true,
+		});
+		app.setNotFoundHandler(async function (request, reply) {
+			if (request.raw.url?.startsWith("/api")) {
+				return reply.status(404).send({
+					success: false,
+				});
+			}
+			return reply.status(200).sendFile("index.html");
+		});
+	}
 	app.register(env, {
 		dotenv: true,
 		schema: {

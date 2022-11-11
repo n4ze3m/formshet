@@ -3,10 +3,11 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "start": "node index.js",
+    "start": "pnpm prisma migrate deploy && pnpm prisma generate && node ./build/index.js",
     "dev": "nodemon src/index.ts",
     "db:migrate": "FORMSHET_DATABASE_URL=file:../db/database.db prisma migrate dev --skip-seed --name",
-    "db:push": "prisma db push && prisma generate"
+    "db:push": "prisma db push && prisma generate",
+    "build": "tsc"
   },
   "keywords": [],
   "author": "",
@@ -29,6 +30,7 @@
     "@fastify/formbody": "^7.2.0",
     "@fastify/jwt": "^6.3.2",
     "@fastify/multipart": "^7.1.2",
+    "@fastify/static": "^6.5.0",
     "@prisma/client": "^4.3.1",
     "@trycourier/courier": "^4.1.0",
     "bcryptjs": "^2.4.3",

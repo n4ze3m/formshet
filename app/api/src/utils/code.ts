@@ -1,4 +1,4 @@
-import prettier from "prettier";
+import * as prettier from "prettier";
 
 export const generateHTMLCode = (id: string, headers: string[][]) => {
   const host = process.env.FORMSHET_HOST || "http://localhost:3000";

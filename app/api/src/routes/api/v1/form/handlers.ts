@@ -240,6 +240,7 @@ export const createSheet = async (
 			message: "Form created successfully",
 		};
 	} catch (error) {
+		console.log(error);
 		return reply.status(400).send({
 			error: "You don't have access to this sheet",
 		});
@@ -418,6 +419,7 @@ export const getUserFormCode = async (
 			},
 		];
 	} catch (e) {
+		console.log(e);
 		return reply.status(500).send({
 			error: "Something went wrong",
 		});
