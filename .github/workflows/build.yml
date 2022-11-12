@@ -28,5 +28,5 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           context: .
-          tags: n4z3m/formshet:${{steps.package-version.outputs.current-version}}, n4z3m/formshet:latest
+          tags: n4z3m/formshet:lastest
           push: true
