@@ -79,19 +79,22 @@ export const userRegister = async (
 	});
 
 	const userCounts = await prisma.user.count();
-	const maxUsers = await prisma.applicationSetting.findFirst({
-		where: {
-			maxUsers: {
-				gte: userCounts + 1,
+	if (userCounts > 0) {
+		const maxUsers = await prisma.applicationSetting.findFirst({
+			where: {
+				maxUsers: {
+					gte: userCounts + 1,
+				},
 			},
-		},
-	});
+		});
 
-	if (!maxUsers) {
-		throw {
-			status: 403,
-			message: "Maximum users registeration reached. Please contact the admin.",
-		};
+		if (!maxUsers) {
+			throw {
+				status: 403,
+				message:
+					"Maximum users registeration reached. Please contact the admin.",
+			};
+		}
 	}
 
 	if (user) {
