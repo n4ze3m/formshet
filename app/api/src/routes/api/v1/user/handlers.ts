@@ -126,9 +126,13 @@ export const userRegister = async (
 				role: "ADMIN",
 			},
 		});
-		// generate settings
+
+		const url = request.hostname || "http://localhost:3000";
+		const siteUrl = url.replace(/(^\w+:|^)\/\//, "").replace(/\/$/, "");
 		await prisma.applicationSetting.create({
-			data: {},
+			data: {
+				siteUrl,
+			},
 		});
 	}
 
@@ -195,6 +199,12 @@ export const userSettings = async (
 			id: 4,
 			label: "Maxiumum Users",
 			value: settings.maxUsers,
+			type: "input",
+		},
+		{
+			id: 5,
+			label: "Site URL",
+			value: settings.siteUrl,
 			type: "input",
 		},
 	];
@@ -298,6 +308,16 @@ export const updateUserAdminSettings = async (
 				await prisma.applicationSetting.updateMany({
 					data: {
 						maxUsers: parseInt(body[key] as string, 10),
+					},
+				});
+				break;
+			}
+			case "5": {
+				const url = body[key] as string;
+				const siteUrl = url.replace(/(^\w+:|^)\/\//, "").replace(/\/$/, "");
+				await prisma.applicationSetting.updateMany({
+					data: {
+						siteUrl,
 					},
 				});
 				break;

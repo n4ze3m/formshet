@@ -152,9 +152,26 @@ export const submitSheetForm = async (
 	if (form.sendEmail) {
 		const preview = generateMarkdownTable(data);
 		const message = "You have a new submission on your form";
-		const url = `${process.env.FORMSHET_HOST || "http://localhost:5173"}/form/${
-			form.id
-		}`;
+
+		let siteUrl = "http://localhost:5173";
+
+		const applicationSetting = await prisma.applicationSetting.findFirst({});
+
+		if (applicationSetting) {
+			siteUrl = applicationSetting.siteUrl;
+		}
+
+		let protocol = "https";
+		// if url is localhost or IP address
+
+		if (
+			siteUrl.match(/^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$/) ||
+			siteUrl.includes("localhost:")
+		) {
+			protocol = "http";
+		}
+
+		const url = `${protocol}://${siteUrl}/form/${form.id}`;
 		await sendNotification(form.user.email, message, preview, url);
 	}
 
@@ -408,7 +425,28 @@ export const getUserFormCode = async (
 		const id = form.sheetId;
 		const headers = await getSheetHeaders(id);
 
-		const htmlCode = generateHTMLCode(form.publicId, headers);
+		let siteUrl = "http://localhost:5173";
+
+		const applicationSetting = await prisma.applicationSetting.findFirst({});
+
+		if (applicationSetting) {
+			siteUrl = applicationSetting.siteUrl;
+		}
+
+		let protocol = "https";
+		// if url is localhost or IP address
+
+		if (
+			siteUrl.match(/^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$/) ||
+			siteUrl.includes("localhost:")
+		) {
+			protocol = "http";
+		}
+
+
+		const url = `${protocol}://${siteUrl}`;
+
+		const htmlCode = generateHTMLCode(form.publicId, headers,url);
 
 		return [
 			{
