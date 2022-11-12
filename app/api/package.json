@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "start": "pnpm prisma migrate deploy && pnpm prisma generate && node ./build/index.js",
+    "start": "pnpm prisma migrate deploy && pnpm prisma generate && node index.js",
     "dev": "nodemon src/index.ts",
     "db:migrate": "FORMSHET_DATABASE_URL=file:../db/database.db prisma migrate dev --skip-seed --name",
     "db:push": "prisma db push && prisma generate",
