@@ -1,2 +1,6 @@
 pnpm-workspace.yaml
 pnpm-lock.yaml
+docker/*
+.env.*
+.env
+node_modules

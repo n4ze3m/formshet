@@ -49,7 +49,7 @@ const main = async () => {
 		dotenv: true,
 		schema: {
 			type: "object",
-			required: ["FORMSHET_SECRET_KEY", "GOOGLE_CRED_PATH"],
+			required: ["FORMSHET_SECRET_KEY", "FORMSHET_GOOGLE_CRED_PATH"],
 			properties: {
 				FORMSHET_SECRET_KEY: {
 					type: "string",
@@ -62,7 +62,7 @@ const main = async () => {
 					type: "string",
 					default: "http://localhost:3000",
 				},
-				GOOGLE_CRED_PATH: {
+				FORMSHET_GOOGLE_CRED_PATH: {
 					type: "string",
 				},
 				FORMSHET_NOTIFICATIONS_PROVIDER: {

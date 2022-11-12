@@ -22,7 +22,8 @@ COPY --from=build /app/app/api/prisma/ ./prisma
 COPY --from=build /app/app/api/package.json .
 # Copy UI
 COPY --from=build /app/app/ui/dist/ ./public
-
+# create db
+RUN mkdir -p ./db
 RUN pnpm install -p
 
 EXPOSE 3000

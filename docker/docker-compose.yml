@@ -1,0 +1,13 @@
+version: '3.9'
+
+services:
+  formshet:
+    image: n4z3m/formshet:latest
+    container_name: formshet
+    restart: unless-stopped
+    ports:
+      - 3000:3000
+    volumes:
+      - .formshetdb:/app/db
+    env_file:
+      - .env
