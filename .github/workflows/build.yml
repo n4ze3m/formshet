@@ -30,4 +30,3 @@ jobs:
           context: .
           tags: n4z3m/formshet:${{steps.package-version.outputs.current-version}}, n4z3m/formshet:latest
           push: true
-          tags: user/app:latest
