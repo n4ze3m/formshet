@@ -1,6 +1,19 @@
 # FormShet
 
-> **Warning**
-> This project is still in development and not ready to be used in production or even in development.
+A form backend for your application using Google Sheets as database. 
 
-Open source form backend for your static site using Google Sheets as a database.
+[x] Store data directly to Google Sheets
+[x] Get notified from any channel (email, Slack, etc.) using [Courier](https://courier.com)
+[x] Dashboard to view form submissions
+
+## Documentation
+
+For more information, see the [FormShet documentation](https://docs.fs.n4ze3m.site).
+
+## License
+
+[MIT](LICENSE)
+
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md).

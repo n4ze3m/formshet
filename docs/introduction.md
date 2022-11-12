@@ -65,11 +65,12 @@ All you need to do is to create a Google Sheet and share it with the service acc
 
 ## Roadmap (upcoming features)
 
--  Form builder (create forms using a simple UI)
--  Access form data using a simple API
--  Form analytics
--  Webhooks
--  Team management (create teams and share forms with team members)
+- [ ]  Form builder (create forms using a simple UI)
+- [ ] Access form data using a simple API
+- [ ] Form analytics
+- [ ] Webhooks
+- [ ] Team management (create teams and share forms with team members)
+- [ ] API response customization (customize the response of the API)
 
 ## Community
 
