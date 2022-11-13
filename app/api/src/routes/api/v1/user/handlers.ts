@@ -2,6 +2,7 @@ import { FastifyReply, FastifyRequest } from "fastify";
 import { prisma } from "../../../../utils/common";
 import { Login, Register, SettingsUpdates, UpdatePassword } from "./types";
 import * as bcrypt from "bcryptjs";
+import * as fs from "fs";
 
 export const userLogin = async (
 	request: FastifyRequest<Login>,
@@ -187,6 +188,20 @@ export const userSettings = async (
 			type: "input",
 		},
 	];
+	const credPath = process.env.FORMSHET_GOOGLE_CRED_PATH;
+
+	if (credPath) {
+		const credFile = fs.readFileSync(credPath, "utf8");
+		const cred = JSON.parse(credFile);
+		if (cred.type === "service_account") {
+			profileBlock.push({
+				id: 5,
+				label: "Google Sheet",
+				value: cred.client_email,
+				type: "copy",
+			});
+		}
+	}
 
 	const adminBlock = [
 		{

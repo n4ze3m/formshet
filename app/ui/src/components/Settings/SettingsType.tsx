@@ -1,4 +1,11 @@
-import { Switch, TextInput } from "@mantine/core";
+import {
+	ActionIcon,
+	CopyButton,
+	Switch,
+	TextInput,
+	Tooltip,
+} from "@mantine/core";
+import { ClipboardCheck, Clipboard } from "tabler-icons-react";
 
 type IProps = {
 	id: string;
@@ -36,6 +43,37 @@ export const SettingType = ({ id, type, value, onChange, label }: IProps) => {
 				/>
 			);
 
+		case "copy":
+			return (
+				<TextInput
+					key={id}
+					value={value as string}
+					readOnly={true}
+					label={label}
+					mb="md"
+					rightSection={
+						<CopyButton key={id} value={value as string} timeout={2000}>
+							{({ copied, copy }) => {
+								return (
+									<Tooltip
+										label={copied ? "Copied" : "Copy"}
+										withArrow={true}
+										position="right"
+									>
+										<ActionIcon color={copied ? "teal" : "gray"} onClick={copy}>
+											{copied ? (
+												<ClipboardCheck fontSize={16} />
+											) : (
+												<Clipboard fontSize={16} />
+											)}
+										</ActionIcon>
+									</Tooltip>
+								);
+							}}
+						</CopyButton>
+					}
+				/>
+			);
 		default:
 			return <div>Unknown type</div>;
 	}
