@@ -17,3 +17,8 @@ For more information, see the [FormShet documentation](https://docs.fs.n4ze3m.si
 ## Contributing
 
 See [CONTRIBUTING.md](CONTRIBUTING.md).
+
+
+## Important
+
+This project is not affiliated with Google in any way. Google Sheets is a trademark of Google LLC.

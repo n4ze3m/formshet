@@ -72,6 +72,10 @@ All you need to do is to create a Google Sheet and share it with the service acc
 - [ ] Team management (create teams and share forms with team members)
 - [ ] API response customization (customize the response of the API)
 
+## Important
+
+This project is not affiliated with Google in any way. Google Sheets is a trademark of Google LLC. 
+
 ## Community
 
 If you have any questions or suggestions, please feel free to open an issue or contact me on [Twitter](https://twitter.com/n4ze3m).

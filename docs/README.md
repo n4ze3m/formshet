@@ -2,6 +2,8 @@
 
 > A form backend for your application using Google Sheets as database.
 
+
+
 ## What is FormShet?
 
 FormShet is a simple and lightweight form backend for your application. It stores data directly to Google Sheets and sends you an email notifications when a new form is submitted.
@@ -71,6 +73,12 @@ All you need to do is to create a Google Sheet and share it with the service acc
 - [ ] Webhooks
 - [ ] Team management (create teams and share forms with team members)
 - [ ] API response customization (customize the response of the API)
+
+## Important
+
+This project is not affiliated with Google in any way. Google Sheets is a trademark of Google LLC. 
+
+
 
 ## Community
 
