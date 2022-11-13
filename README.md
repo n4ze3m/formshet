@@ -2,9 +2,9 @@
 
 A form backend for your application using Google Sheets as database. 
 
-[x] Store data directly to Google Sheets
-[x] Get notified from any channel (email, Slack, etc.) using [Courier](https://courier.com)
-[x] Dashboard to view form submissions
+- [x] Store data directly to Google Sheets
+- [x] Get notified from any channel (email, Slack, etc.) using [Courier](https://courier.com)
+- [x] Dashboard to view form submissions
 
 ## Documentation
 

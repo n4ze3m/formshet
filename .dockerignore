@@ -5,3 +5,4 @@ docker/*
 .env
 node_modules
 docs
+docker
