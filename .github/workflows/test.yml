@@ -29,4 +29,4 @@ jobs:
           push: true
           tags: |
             n4z3m/formshet:latest
-            n4z3m/formshet:$GITHUB_REF_NAME
+            n4z3m/formshet:${{ github.ref_name}}
