@@ -22,10 +22,6 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PWD }}
-      - name: Get current package version
-        id: package-version
-        run: |
-          echo "::set-output name=version::$(node -p -e "require('./package.json').version")"
       - name: Build and push
         uses: docker/build-push-action@v3
         with:
@@ -33,4 +29,4 @@ jobs:
           push: true
           tags: |
             n4z3m/formshet:latest
-            n4z3m/formshet:${{ steps.package-version.outputs.version }}
+            n4z3m/formshet:${{ steps.docker_meta.outputs.tags }}
